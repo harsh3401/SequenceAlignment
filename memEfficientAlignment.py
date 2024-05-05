@@ -1,6 +1,12 @@
 import sys
+
 strings=[]
 insertion_points=[]
+penalty_grid =          [[0, 110, 48, 94],
+                      [110, 0, 118, 48],
+                      [48, 118, 0, 110],
+                      [94, 48, 110, 0]]
+
 def processInput():
     
     INPUT_FILE_NAME = sys.argv[1]
@@ -21,7 +27,9 @@ def processInput():
 
 
 def generateString():
+    
     inputStrings=strings.copy()
+    
     for index,_ in enumerate(inputStrings):
         indices=insertion_points[index]
         print(indices)
@@ -29,15 +37,19 @@ def generateString():
                 inputString=inputStrings[index][:insertionPoint+1]+inputStrings[index]+inputStrings[index][insertionPoint+1:]
                 inputStrings[index]=inputString
                 print(inputStrings[index])
-    print("final",inputStrings)      
+   
         
         
-processInput()
-generateString()
+def penalty_grid_value(character1,character2):
+    mainString='ACGT'
+    idx1=mainString.find(character1)
+    idx2=mainString.find(character2)
+    return penalty_grid_value[idx1][idx2]
+    
     
     
 
-# def getScore():
+
     
     
 
