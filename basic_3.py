@@ -1,8 +1,7 @@
 
 import sys
 import time
-import tracemalloc
-
+import psutil
 
 strings=[]
 insertion_points=[]
@@ -69,27 +68,21 @@ def alignment(str1,str2):
 def get_path_simple(OPT, s1, s2):
   s1_length = len(s1)
   s2_length = len(s2)
-
   # Initialize aligned strings
   s1_final = ""
   s2_final = ""
-
   # Start from the bottom right corner
   i = s1_length
   j = s2_length
 
   while i > 0 or j > 0:
-    # Move diagonally if the previous diagonal cell had the minimum cost
    
-
     # Move up if the previous row cell had the minimum cost (gap in s1)
     if OPT[i][j] == OPT[i - 1][j] + gap:
       s1_final = s1[i - 1] + s1_final
       s2_final = "_" + s2_final
       i -= 1
-     
       
-
     # Move left if the previous column cell had the minimum cost (gap in s2)
     elif OPT[i][j] == OPT[i][j-1]+gap:
       s1_final = "_" + s1_final
@@ -101,17 +94,8 @@ def get_path_simple(OPT, s1, s2):
       s2_final = s2[j - 1] + s2_final
       i -= 1
       j -= 1
-      
-      
-
   # Print and return aligned strings
   return [s1_final, s2_final]
-
-def penaltyGridValue(character1,character2):
-    mainString='ACGT'
-    idx1=mainString.find(character1)
-    idx2=mainString.find(character2)
-    return penalty_grid[idx1][idx2]
 
 def process_memory():
     process = psutil.Process() 
@@ -120,38 +104,22 @@ def process_memory():
     return memory_consumed
 
 def driver():
- 
   processInput()
   inputStrings = generateString()
   OPT = alignment(inputStrings[0],inputStrings[1])
   data_to_op.append(OPT[len(inputStrings[0])][len(inputStrings[1])])
-  print(getStringDiff(inputStrings[0],inputStrings[1]))
   finalstr=get_path_simple(OPT,inputStrings[0],inputStrings[1])
   data_to_op.append(finalstr[0])
   data_to_op.append(finalstr[1])
-
-def getStringDiff(str1,str2):
-    score=0
-    for idx in range(len(str1)):
-        if str1[idx].isalpha() and str2[idx].isalpha():
-            score+=penaltyGridValue(str1[idx],str2[idx])
-        else:
-            if str1[idx].isalpha() and str2[idx]=='-':
-                score+=30
-            if str2[idx].isalpha() and str1[idx]=='-':
-                score+=30
-    return score 
-
-
+  
 if __name__ == "__main__":
-    tracemalloc.start(25)
-    start_time=time.time() 
+    start_time=time.time()
     driver()
     end_time = time.time()
-    size, peak = tracemalloc.get_traced_memory()
-    print(peak)
+    mem_usage=process_memory()
     time_taken = (end_time - start_time)*1000 
     data_to_op.append(time_taken)
+    data_to_op.append(mem_usage)
     OUTPUT_FILE = sys.argv[2]
     with open(OUTPUT_FILE, "w") as f:
          for item in data_to_op:

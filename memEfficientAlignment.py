@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 import sys
 from resource import * 
 import time 
@@ -50,7 +49,16 @@ def generateString():
                 inputStrings[index]=inputString
     return inputStrings
    
+def add_elements(arr1, arr2):
 
+  if len(arr1) != len(arr2):
+    raise ValueError("Arrays must have the same length")
+
+  new_arr = []
+  for i in range(len(arr1)):
+    new_arr.append(arr1[i] + arr2[i])
+
+  return new_arr
     
 def divideAndConquerAlign(stringx,stringy,x_offset,y_offset):
     
@@ -66,7 +74,7 @@ def divideAndConquerAlign(stringx,stringy,x_offset,y_offset):
       
         forwardAlignment=runMemEfficientPass(stringx[0:strxlen//2],stringy)[1]
         backwardAlignment=runMemEfficientPass(stringx[strxlen//2:][::-1],stringy[::-1])[1][::-1]
-        sum_data=np.add(forwardAlignment, backwardAlignment)
+        sum_data=add_elements(forwardAlignment, backwardAlignment)
         minimum_data=[0,sum_data[0]]
         for idx,sum in enumerate(sum_data):
             if sum <minimum_data[1]:
@@ -114,10 +122,10 @@ def getMismatchStrings(path,stringx,stringy):
     for idx in range(0,len(path)-1):
         if path[idx][1]==path[idx+1][1] and path[idx][0]<path[idx+1][0]:
             strx=strx+stringx[strxid]
-            stry=stry+'-'
+            stry=stry+'_'
             strxid=strxid+1
         elif path[idx][0]==path[idx+1][0] and path[idx][1]<path[idx+1][1]:
-            strx=strx+'-'
+            strx=strx+'_'
             stry=stry+stringy[stryid]
             stryid=stryid+1
         # Skipping overlapping cells in the path
@@ -177,28 +185,34 @@ def testRunner():
     divideAndConquerAlign(strings[0],strings[1],0,0)
     path.sort(key = lambda x:(x[0],x[1]))
     res1,res2=getMismatchStrings(path,strings[0],strings[1])
-    print(getStringDiff(res1,res2))
+    opt=runMemEfficientPass(strings[0],strings[1])[1][-1]
+    return res1,res2,opt
  
 
-def getStringDiff(str1,str2):
-    score=0
-    for idx in range(len(str1)):
-        if str1[idx].isalpha() and str2[idx].isalpha():
-            score+=penaltyGridValue(str1[idx],str2[idx])
-        else:
-            if str1[idx].isalpha() and str2[idx]=='-':
-                score+=30
-            if str2[idx].isalpha() and str1[idx]=='-':
-                score+=30
-    return score
+# def getStringDiff(str1,str2):
+#     score=0
+#     for idx in range(len(str1)):
+#         if str1[idx].isalpha() and str2[idx].isalpha():
+#             score+=penaltyGridValue(str1[idx],str2[idx])
+#         else:
+#             if str1[idx].isalpha() and str2[idx]=='_':
+#                 score+=30
+#             if str2[idx].isalpha() and str1[idx]=='_':
+#                 score+=30
+#     return score
     
 if __name__ == "__main__":
     start_time=time.time() 
-    testRunner()
+    res1,res2,opt=testRunner()
     end_time = time.time()
-    print("memory",process_memory())
+    memory=process_memory()
     time_taken = (end_time - start_time)*1000 
+    data_to_op=[]
+    data_to_op.append(opt)
+    data_to_op.append(res1)
+    data_to_op.append(res2)
     data_to_op.append(time_taken)
+    data_to_op.append(memory)
     OUTPUT_FILE = sys.argv[2]
     with open(OUTPUT_FILE, "w") as f:
          for item in data_to_op:
