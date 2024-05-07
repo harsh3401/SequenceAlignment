@@ -41,10 +41,14 @@ def generateString():
         
         
 def penalty_grid_value(character1,character2):
-    mainString='ACGT'
+    mainString="ACGT"
     idx1=mainString.find(character1)
     idx2=mainString.find(character2)
-    return penalty_grid_value[idx1][idx2]
+    print(penalty_grid[idx1][idx2])
+    return penalty_grid[idx1][idx2]
+
+penalty_grid_value("A","T")    
+
     
     
     
