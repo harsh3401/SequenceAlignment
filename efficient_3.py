@@ -217,7 +217,7 @@ if __name__ == "__main__":
     with open(OUTPUT_FILE, "w") as f:
          for item in data_to_op:
             f.write(f"{item}\n")
-    
+
 
 
     

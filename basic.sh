@@ -1,0 +1,1 @@
+python memEfficientAlignment.py input.txt output.txt 
