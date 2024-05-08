@@ -1,1 +1,1 @@
-python memEfficientAlignment.py input.txt output.txt 
+python basic_3.py "$1" "$2"
