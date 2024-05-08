@@ -59,43 +59,43 @@ def alignment(str1,str2):
 
     for i in range(1,str1_length+1):
         for j in range(1,str2_length+1):
-                min_value= min(OPT[i - 1][j - 1]+ penalty_grid_value(str1[i-1], str2[j-1]),
+                min_cost= min(OPT[i - 1][j - 1]+ penalty_grid_value(str1[i-1], str2[j-1]),
                                 OPT[i - 1][j] + gap,
                                 OPT[i][j - 1] + gap)
-                OPT[i][j]=min_value
+                OPT[i][j]=min_cost
     return OPT
 
 def get_path_simple(OPT, s1, s2):
-  s1_length = len(s1)
-  s2_length = len(s2)
+  string1_length = len(s1)
+  string2_length = len(s2)
   # Initialize aligned strings
-  s1_final = ""
-  s2_final = ""
+  final_string1 = ""
+  final_string2 = ""
   # Start from the bottom right corner
-  i = s1_length
-  j = s2_length
+  i = string1_length
+  j = string2_length
 
   while i > 0 or j > 0:
    
     # Move up if the previous row cell had the minimum cost (gap in s1)
     if OPT[i][j] == OPT[i - 1][j] + gap:
-      s1_final = s1[i - 1] + s1_final
-      s2_final = "_" + s2_final
+      final_string1 = s1[i - 1] + final_string1
+      final_string2 = "_" + final_string2
       i -= 1
       
     # Move left if the previous column cell had the minimum cost (gap in s2)
     elif OPT[i][j] == OPT[i][j-1]+gap:
-      s1_final = "_" + s1_final
-      s2_final = s2[j - 1] + s2_final
+      final_string1 = "_" + final_string1
+      final_string2 = s2[j - 1] + final_string2
       j -= 1
 
     else:
-      s1_final = s1[i - 1] + s1_final
-      s2_final = s2[j - 1] + s2_final
+      final_string1 = s1[i - 1] + final_string1
+      final_string2 = s2[j - 1] + final_string2
       i -= 1
       j -= 1
   # Print and return aligned strings
-  return [s1_final, s2_final]
+  return [final_string1, final_string2]
 
 def process_memory():
     process = psutil.Process() 
