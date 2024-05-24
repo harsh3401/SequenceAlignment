@@ -1,2 +1,2 @@
 # SequenceAlignment
-Sequence Alignment testing using DP and Divide and conquer.
+Sequence Alignment algorithms using DP and Divide and conquer.
